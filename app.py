@@ -28,6 +28,9 @@ if "path" not in st.session_state:
 if "step" not in st.session_state:
     st.session_state.step = 0
 
+if "path_status" not in st.session_state:
+    st.session_state.path_status = "not_searched"
+
 
 # Environment
 grid = Grid(
@@ -66,10 +69,17 @@ col1, col2, col3 = st.columns(3)
 
 with col1:
     if st.button("🔍 Find Path", use_container_width=True):
+
         st.session_state.path = agent.find_path(
             START, GOAL, grid
         )
+
         st.session_state.step = 0
+
+        if st.session_state.path is None:
+            st.session_state.path_status = "unreachable"
+        else:
+            st.session_state.path_status = "found"
 
 with col2:
     if st.button(
@@ -88,6 +98,7 @@ with col3:
         }
         st.session_state.path = None
         st.session_state.step = 0
+        st.session_state.path_status = "not_searched"
 
         st.rerun()
 
@@ -135,6 +146,7 @@ for row in range(ROWS):
 
                 st.session_state.path = None
                 st.session_state.step = 0
+                st.session_state.path_status = "not_searched"
 
                 st.rerun()
 
@@ -142,16 +154,29 @@ for row in range(ROWS):
 # Status information
 st.divider()
 
-if path:
-    st.metric("Shortest path length", len(path) - 1)
+if st.session_state.path_status == "unreachable":
+
+    st.error(
+        "🚫 No valid path found! "
+        "The goal is unreachable with the current obstacles."
+    )
+
+    st.info(
+        "Try removing some obstacles and searching again."
+    )
+
+elif st.session_state.path_status == "found":
+
+    st.metric(
+        "Shortest path length",
+        len(path) - 1
+    )
 
     st.progress(
         st.session_state.step / max(len(path) - 1, 1)
     )
 
-    st.write(
-        f"Agent position: {current_position}"
-    )
+    st.write(f"Agent position: {current_position}")
 
     if current_position == GOAL:
         st.success("🎉 Goal reached!")
@@ -162,7 +187,7 @@ if path:
         )
 
 else:
+
     st.info(
-        "Click Find Path to let the agent search "
-        "for a route."
+        "Waiting for instructions. Click Find Path to begin."
     )
