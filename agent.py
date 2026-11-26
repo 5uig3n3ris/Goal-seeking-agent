@@ -1,24 +1,37 @@
-def __init__(self, start): 
-  self.position = start
-def perceive(self, goal):
-  ax, ay = self.position 
-  gx, gy = goal
-  dx = gx - ax 
-  dy = gy - ay 
-  return
-   dx, dy 
 
-def decide(self, dx, dy): 
-  # Prefer horizontal movement first 
-  if dx != 0: 
-    return (1 if dx > 0 else -1, 0) 
-  elif dy != 0: 
-    return (0, 1 if dy > 0 else -1) 
-  return (0, 0)
+from collections import deque
 
-def move(self, direction, grid): 
-  new_x = self.position[0] + direction[0] 
-  new_y = self.position[1] + direction[1] 
-  new_pos = (new_x, new_y) 
-  if grid.is_valid(new_pos): 
-    self.position = new_pos
+
+class Agent:
+    def __init__(self, start):
+        self.position = start
+
+    def find_path(self, start, goal, grid):
+        queue = deque([[start]])
+        visited = {start}
+
+        directions = [
+            (-1, 0),  # Up
+            (1, 0),   # Down
+            (0, -1),  # Left
+            (0, 1)    # Right
+        ]
+
+        while queue:
+            path = queue.popleft()
+            current = path[-1]
+
+            if current == goal:
+                return path
+
+            for dx, dy in directions:
+                neighbor = (
+                    current[0] + dx,
+                    current[1] + dy
+                )
+
+                if neighbor not in visited and grid.is_valid(neighbor):
+                    visited.add(neighbor)
+                    queue.append(path + [neighbor])
+
+        return None
