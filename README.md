@@ -18,16 +18,21 @@ A simple AI agent that learns how to reach a goal on a 2D grid while avoiding ob
 
 
 🚀 Demo
-Coming soon!
+https://goal-seeking-agent-eedb2l86myjsrzkh4bh2qu.streamlit.app/
 
 📁 Folder Structure
 
 goal-seeking-agent/
 ├── agent.py 
+
 ├── grid.py
+
 ├── main.py 
+
 ├── requirements.txt
+
 └── README.md
+
 
 📌 To Do
 - Add a visual demo with streamlit or pygame
