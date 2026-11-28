@@ -55,6 +55,7 @@ st.divider()
 
 # Instructions
 st.markdown("""
+If you're using a mobile phone, ensure you set it to desktop site mode 🖥
 ### How to play
 - 🤖 Agent: Starting position
 - 🎯 Goal: Destination
